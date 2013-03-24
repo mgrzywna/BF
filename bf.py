@@ -2,6 +2,7 @@
 
 
 CELL_SIZE = 256
+MEMORY_SIZE = 1024 * 1024 * 1024
 
 
 class EvalError(Exception):
@@ -55,9 +56,12 @@ def bfeval(code):
         elif instruction == "<":
             if ptr > 0: ptr -= 1
         elif instruction == ">":
-            ptr += 1
-            if ptr == len(memory):
-                memory.append(0)
+            if ptr < MEMORY_SIZE - 1:
+                ptr += 1
+                if ptr == len(memory):
+                    memory.append(0)
+            else:
+                raise EvalError("Out of memory")
 
         # increase or decrease cell value
         elif instruction == "+":
