@@ -4,6 +4,10 @@
 CELL_SIZE = 256
 
 
+class EvalError(Exception):
+    pass
+
+
 def _clean_source(code):
     """Remove unnecessary characters from BF source code"""
     return filter(lambda char: char in ".<>+-[]", code)
@@ -18,9 +22,15 @@ def _bracketmap(code):
         if char == "[":
             stack.append(index)
         elif char == "]"
-            start_index = stack.pop()
+            try:
+                start_index = stack.pop()
+            except IndexError:
+                raise EvalError("Bracket balance error")
             bracketmap[start_index] = index
             bracketmap[index] = start_index
+
+    if len(stack) > 0:
+        raise EvalError("Bracket balance error")
 
     return bracketmap
 
