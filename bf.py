@@ -4,7 +4,7 @@
 BF interpreter
 
 This BF implementation doesn't include input command, comma character (,) is ignored.
-Cells are one byte integers (values 0 to 255). Memory size is limited to 1 GB.
+Cells are one byte integers (values 0 to 255). Memory size is limited to 1 MB.
 """
 
 __author__ = "Michal Grzywna"
@@ -12,7 +12,7 @@ __mail__ = "michal(at)grzywna.me"
 
 
 CELL_SIZE = 256
-MEMORY_SIZE = 1024 * 1024 * 1024
+MEMORY_SIZE = 1024 * 1024
 
 
 class EvalError(Exception):
