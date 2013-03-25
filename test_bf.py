@@ -64,7 +64,7 @@ class TestBF(unittest.TestCase):
 
 
     def test_emptycode(self):
-        bfeval("")
+        self.assertEqual(bfeval(""), "")
 
 
     def test_cells(self):
