@@ -40,10 +40,10 @@ def _bracketmap(code):
         elif char == "]":
             try:
                 start_index = stack.pop()
+                bracketmap[start_index] = index
+                bracketmap[index] = start_index
             except IndexError:
                 raise EvalError("Bracket balance error")
-            bracketmap[start_index] = index
-            bracketmap[index] = start_index
 
     if len(stack) > 0:
         raise EvalError("Bracket balance error")
