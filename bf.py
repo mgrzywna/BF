@@ -3,13 +3,12 @@
 """
 BF interpreter
 
-This BF implementation doesn't include input command, comma character (,) is ignored.
 Cells are one byte integers (values 0 to 255). Memory size is limited to 1 MB.
 """
 
-__author__ = "Michal Grzywna"
-__mail__ = "michal(at)grzywna.me"
+__author__ = "Michał Grzywna"
 
+import sys
 
 CELL_SIZE = 256
 MEMORY_SIZE = 1024 * 1024
@@ -19,9 +18,19 @@ class EvalError(Exception):
     pass
 
 
+def input_callback():
+    """Default callback function for input"""
+    return sys.stdin.read(1)
+
+
+def output_callback(text):
+    """Default callback function for output"""
+    sys.stdout.write(text)
+
+
 def _clean_source(code):
     """Remove unnecessary characters from BF source code."""
-    return filter(lambda char: char in ".<>+-[]", code)
+    return filter(lambda char: char in ".,<>+-[]", code)
 
 
 def _bracketmap(code):
@@ -51,7 +60,7 @@ def _bracketmap(code):
     return bracketmap
 
 
-def bfeval(code):
+def bfeval(code, _input=input_callback, _output=output_callback):
     """Evaluate BF source code."""
     code = _clean_source(code)
     bracketmap = _bracketmap(code)
@@ -65,6 +74,12 @@ def bfeval(code):
 
         # print character
         if instruction == ".": result.append(chr(memory[ptr]))
+
+        # get character
+        elif instruction == ",":
+            _output("".join(result))
+            result = []
+            memory[ptr] = ord(_input())
 
         # move data pointer
         elif instruction == "<":
@@ -92,5 +107,5 @@ def bfeval(code):
         # go to next instruction
         iptr += 1
 
-    return "".join(result)
+    _output("".join(result))
 
