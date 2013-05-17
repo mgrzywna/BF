@@ -77,7 +77,7 @@ def bfeval(code, _input=input_callback, _output=output_callback):
 
         # get character
         elif instruction == ",":
-            _output("".join(result))
+            if result: _output("".join(result))
             result = []
             memory[ptr] = ord(_input())
 
@@ -107,5 +107,5 @@ def bfeval(code, _input=input_callback, _output=output_callback):
         # go to next instruction
         iptr += 1
 
-    _output("".join(result))
+    if result: _output("".join(result))
 
