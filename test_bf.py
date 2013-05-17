@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*
+# -*- coding: utf-8 -*-
 
 import unittest
 from itertools import repeat
@@ -6,6 +6,18 @@ from bf import CELL_SIZE, MEMORY_SIZE, EvalError, _clean_source, _bracketmap, bf
 
 
 TEST_MEMORY = True
+
+
+class TextAccumulator(object):
+
+    def __init__(self):
+        self.result = []
+
+    def __call__(self, text):
+        self.result.append(text)
+
+    def get(self):
+        return "".join(self.result)
 
 
 class TestBF(unittest.TestCase):
@@ -20,9 +32,9 @@ class TestBF(unittest.TestCase):
             "-": "-",
             "[": "[",
             "]": "]",
-            ",": "",
+            ",": ",",
             "lorem ipsum": "",
-            "abcde.<>+-[]abcde": ".<>+-[]",
+            "abcde.,<>+-[]abcde": ".,<>+-[]",
             "": ""
         }
 
@@ -60,17 +72,23 @@ class TestBF(unittest.TestCase):
         code = ("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++.."
                 "+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.")
 
-        self.assertEqual(bfeval(code), "Hello World!")
+        acc = TextAccumulator()
+        bfeval(code, _output=acc)
+        self.assertEqual(acc.get(), "Hello World!")
 
 
     def test_emptycode(self):
-        self.assertEqual(bfeval(""), "")
+        acc = TextAccumulator()
+        bfeval("", _output=acc)
+        self.assertEqual(acc.get(), "")
 
 
     def test_cells(self):
         code = ["+" * 67, ".--.", "+" * (CELL_SIZE + 1), ".", "-" * (CELL_SIZE - 2), "."]
         code = "".join(code)
-        self.assertEqual(bfeval(code), "CABD")
+        acc = TextAccumulator()
+        bfeval(code, _output=acc)
+        self.assertEqual(acc.get(), "CABD")
 
 
     def test_memory(self):
