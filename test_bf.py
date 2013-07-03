@@ -2,10 +2,7 @@
 
 import unittest
 from itertools import repeat
-from bf import CELL_SIZE, MEMORY_SIZE, EvalError, _clean_source, _bracketmap, bfeval
-
-
-TEST_MEMORY = True
+from bf import EvalError, _clean_source, _bracketmap, bfeval
 
 
 class TextAccumulator(object):
@@ -73,30 +70,31 @@ class TestBF(unittest.TestCase):
                 "+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.")
 
         acc = TextAccumulator()
-        bfeval(code, _output=acc)
+        bfeval(code, output_callback = acc)
         self.assertEqual(acc.get(), "Hello World!")
 
 
     def test_emptycode(self):
         acc = TextAccumulator()
-        bfeval("", _output=acc)
+        bfeval("", output_callback = acc)
         self.assertEqual(acc.get(), "")
 
 
     def test_cells(self):
-        code = ["+" * 67, ".--.", "+" * (CELL_SIZE + 1), ".", "-" * (CELL_SIZE - 2), "."]
+        cell_size = 256
+        code = ["+" * 67, ".--.", "+" * (cell_size + 1), ".", "-" * (cell_size - 2), "."]
         code = "".join(code)
         acc = TextAccumulator()
-        bfeval(code, _output=acc)
+        bfeval(code, output_callback = acc)
         self.assertEqual(acc.get(), "CABD")
 
 
     def test_memory(self):
-        if TEST_MEMORY:
-            code = ">" * (MEMORY_SIZE - 1)
-            bfeval(code)
-            code = ">" * MEMORY_SIZE
-            self.assertRaises(EvalError, bfeval, code)
+        memory_size = 1024
+        code = ">" * (memory_size - 1)
+        bfeval(code, memory_size = memory_size)
+        code = ">" * memory_size
+        self.assertRaises(EvalError, bfeval, code, memory_size = memory_size)
 
 
 if __name__ == "__main__":
