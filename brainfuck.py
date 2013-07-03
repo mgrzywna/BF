@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-BF interpreter
-"""
-
-__author__ = "Michal Grzywna"
-
-
 import sys
 from bf import bfeval
 
